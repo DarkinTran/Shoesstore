@@ -42,8 +42,8 @@ pipeline {
                 script {
                     try {
                         sh 'docker --version'
-                        sh 'docker build -t ${nguyentt07}/${shoestore}:${IMAGE_TAG} .'
-                        sh 'docker tag ${nguyentt07}/${shoestore}:${IMAGE_TAG} ${nguyentt07}/${shoestore}:latest'
+                        sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ."
+                        sh "docker tag ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
                         echo 'Docker image built successfully!'
                     } catch (Exception e) {
                         echo 'Docker build failed: ' + e.getMessage()
