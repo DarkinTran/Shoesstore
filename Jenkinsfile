@@ -20,8 +20,8 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 echo 'Running SonarQube analysis...'
-                // Tạm thời chỉ build để test
                 sh 'dotnet build'
+                // SonarQube analysis will be added later
             }
         }
         
@@ -35,10 +35,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                script {
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:latest")
-                }
+                sh 'docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .'
+                sh 'docker tag ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest'
             }
         }
         
@@ -73,7 +71,7 @@ pipeline {
             echo 'Pipeline completed!'
         }
         success {
-            echo 'Build successful!'
+            echo 'Build succeeded!'
         }
         failure {
             echo 'Build failed!'
