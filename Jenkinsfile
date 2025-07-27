@@ -55,12 +55,6 @@ pipeline {
         }
         
         stage('Push to Docker Hub') {
-            when {
-                anyOf {
-                    branch 'main'
-                    branch 'master'
-                }
-            }
             steps {
                 echo 'Pushing to Docker Hub...'
                 script {
