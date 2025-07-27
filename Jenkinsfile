@@ -5,34 +5,26 @@ pipeline {
         DOCKER_REGISTRY = "nguyentt07"
         IMAGE_NAME = "shoestore"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-        SONAR_PROJECT_KEY = "shoestore"
-        SONAR_PROJECT_NAME = "Shoestore"
-        SONAR_PROJECT_VERSION = "${env.BUILD_NUMBER}"
     }
     
     stages {
-        stage('Checkout') {
+        stage('SCM') {
             steps {
                 echo 'Checking out source code...'
                 checkout scm
             }
         }
         
-        stage('Code Analysis with SonarQube') {
+        stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube analysis...'
                 script {
-                    // Cài đặt SonarQube Scanner nếu chưa có
-                    sh 'dotnet tool install --global dotnet-sonarscanner --version 5.13.0'
-                    
-                    // Bắt đầu phân tích SonarQube - sử dụng file cấu hình
-                    sh 'dotnet sonarscanner begin /key:shoestore'
-                    
-                    // Build project
-                    sh 'dotnet build'
-                    
-                    // Kết thúc phân tích SonarQube
-                    sh 'dotnet sonarscanner end'
+                    def scannerHome = tool 'SonarScanner for .NET'
+                    withSonarQubeEnv() {
+                        bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll begin /k:\"shoestore\""
+                        bat "dotnet build"
+                        bat "dotnet ${scannerHome}\\SonarScanner.MSBuild.dll end"
+                    }
                 }
             }
         }
