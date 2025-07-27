@@ -20,11 +20,10 @@ pipeline {
                 echo 'Running SonarQube analysis...'
                 script {
                     def scannerHome = tool 'SonarScanner for .NET'
-                    withSonarQubeEnv() {
-                        // Try using dotnet with the DLL
-                        bat "dotnet \"${scannerHome}\\SonarScanner.MSBuild.dll\" begin /k:\"shoestore\""
+                    withSonarQubeEnv('SonarQube') {
+                        bat "\"${scannerHome}\\SonarScanner.MSBuild.exe\" begin /k:\"shoestore\""
                         bat "dotnet build"
-                        bat "dotnet \"${scannerHome}\\SonarScanner.MSBuild.dll\" end"
+                        bat "\"${scannerHome}\\SonarScanner.MSBuild.exe\" end"
                     }
                 }
             }
