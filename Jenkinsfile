@@ -2,11 +2,12 @@ pipeline {
     agent any
     
     environment {
-        // Thay đổi các giá trị này theo cấu hình của bạn
         DOCKER_REGISTRY = "nguyentt07"
         IMAGE_NAME = "shoestore"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         SONAR_PROJECT_KEY = "shoestore"
+        SONAR_PROJECT_NAME = "Shoestore"
+        SONAR_PROJECT_VERSION = "${env.BUILD_NUMBER}"
     }
     
     stages {
@@ -17,11 +18,22 @@ pipeline {
             }
         }
         
-        stage('Code Analysis') {
+        stage('Code Analysis with SonarQube') {
             steps {
                 echo 'Running SonarQube analysis...'
-                sh 'dotnet build'
-                // SonarQube analysis will be added later
+                script {
+                    // Install SonarQube Scanner if not available
+                    sh 'dotnet tool install --global dotnet-sonarscanner --version 5.13.0'
+                    
+                    // Begin SonarQube analysis
+                    sh 'dotnet sonarscanner begin /k:"${SONAR_PROJECT_KEY}" /n:"${SONAR_PROJECT_NAME}" /v:"${SONAR_PROJECT_VERSION}" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="admin" /d:sonar.password="admin"'
+                    
+                    // Build the project
+                    sh 'dotnet build'
+                    
+                    // End SonarQube analysis
+                    sh 'dotnet sonarscanner end /d:sonar.login="admin" /d:sonar.password="admin"'
+                }
             }
         }
         
@@ -35,49 +47,51 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .'
-                sh 'docker tag ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest'
-            }
-        }
-        
-        // Tạm thời comment stage Push và Deploy
-        /*
-        stage('Push Docker Image') {
-            steps {
-                echo 'Pushing Docker image to registry...'
                 script {
-                    docker.withRegistry('', 'dockerhub-credentials') {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}").push()
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:latest").push()
+                    try {
+                        sh 'docker --version'
+                        sh 'docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .'
+                        sh 'docker tag ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest'
+                        echo 'Docker image built successfully!'
+                    } catch (Exception e) {
+                        echo 'Docker build failed: ' + e.getMessage()
+                        echo 'Please ensure Docker is installed and running on Jenkins server'
+                        currentBuild.result = 'UNSTABLE'
                     }
                 }
             }
         }
         
-        stage('Deploy') {
+        stage('Push to Docker Hub') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'master'
+                }
+            }
             steps {
-                echo 'Deploying application...'
+                echo 'Pushing to Docker Hub...'
                 script {
-                    sh 'docker-compose down || true'
-                    sh 'docker-compose up -d --build'
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}'
+                        sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest'
+                    }
                 }
             }
         }
-        */
     }
     
     post {
-        always {
-            echo 'Pipeline completed!'
-        }
         success {
             echo 'Build succeeded!'
+            echo 'SonarQube analysis completed. Check: http://localhost:9000'
         }
         failure {
             echo 'Build failed!'
-            mail to: 'vicenttran07@gmail.com',
-                 subject: "Build failed in Jenkins: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "Check Jenkins for details: ${env.BUILD_URL}"
+        }
+        unstable {
+            echo 'Build unstable - check Docker installation or SonarQube configuration'
         }
     }
 }
