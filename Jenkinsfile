@@ -22,17 +22,17 @@ pipeline {
             steps {
                 echo 'Running SonarQube analysis...'
                 script {
-                    // Install SonarQube Scanner if not available
+                    // Cài đặt SonarQube Scanner nếu chưa có
                     sh 'dotnet tool install --global dotnet-sonarscanner --version 5.13.0'
                     
-                    // Begin SonarQube analysis
-                    sh 'dotnet sonarscanner begin /k:"${SONAR_PROJECT_KEY}" /n:"${SONAR_PROJECT_NAME}" /v:"${SONAR_PROJECT_VERSION}" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="admin" /d:sonar.password="admin"'
+                    // Bắt đầu phân tích SonarQube
+                    sh 'dotnet sonarscanner begin /key:"${SONAR_PROJECT_KEY}" /name:"${SONAR_PROJECT_NAME}" /version:"${SONAR_PROJECT_VERSION}" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="admin" /d:sonar.password="Dnsdud00@@@@"'
                     
-                    // Build the project
+                    // Build project
                     sh 'dotnet build'
                     
-                    // End SonarQube analysis
-                    sh 'dotnet sonarscanner end /d:sonar.login="admin" /d:sonar.password="admin"'
+                    // Kết thúc phân tích SonarQube
+                    sh 'dotnet sonarscanner end /d:sonar.login="admin" /d:sonar.password="Dnsdud00@@@@"'
                 }
             }
         }
