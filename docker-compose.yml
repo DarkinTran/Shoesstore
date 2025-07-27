@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   shoestore:
-    build: .
+    image: nguyentt07/shoestore:latest
     ports:
-      - "8080:80"
+      - "8888:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__tule=Server=db;Database=Shoestore11;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=db;Database=Shoestore11;User=sa;Password=Dnsdud00@@;TrustServerCertificate=True
     depends_on:
       - db
     restart: unless-stopped
@@ -16,7 +16,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong@Passw0rd
+      - SA_PASSWORD=Dnsdud00@@
     ports:
       - "1433:1433"
     volumes:
