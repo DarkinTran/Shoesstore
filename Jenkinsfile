@@ -25,14 +25,14 @@ pipeline {
                     // Cài đặt SonarQube Scanner nếu chưa có
                     sh 'dotnet tool install --global dotnet-sonarscanner --version 5.13.0'
                     
-                    // Bắt đầu phân tích SonarQube
-                    sh 'dotnet sonarscanner begin /key:"${SONAR_PROJECT_KEY}" /name:"${SONAR_PROJECT_NAME}" /version:"${SONAR_PROJECT_VERSION}" /d:sonar.host.url=http://localhost:9000 /d:sonar.login=admin /d:sonar.password=Dnsdud00@@@@'
+                    // Bắt đầu phân tích SonarQube - sử dụng file cấu hình
+                    sh 'dotnet sonarscanner begin /key:shoestore'
                     
                     // Build project
                     sh 'dotnet build'
                     
                     // Kết thúc phân tích SonarQube
-                    sh 'dotnet sonarscanner end /d:sonar.login=admin /d:sonar.password=Dnsdud00@@@@'
+                    sh 'dotnet sonarscanner end'
                 }
             }
         }
