@@ -6,10 +6,10 @@ EXPOSE 91
 # Stage 1: Build    
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["Shoestore/Shoestore.csproj", "./"]
+COPY ["Shoestore.csproj", "./"]
 RUN dotnet restore "Shoestore.csproj"
 COPY . .
-WORKDIR "/src"
+WORKDIR "/src/."
 RUN dotnet build "Shoestore.csproj" -c Release -o /app/build
 
 FROM build AS publish
