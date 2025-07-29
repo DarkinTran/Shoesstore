@@ -6,13 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configure Kestrel from appsettings.json
-var kestrelUrl = builder.Configuration["Kestrel:Endpoints:Http:Url"];
-if (!string.IsNullOrEmpty(kestrelUrl))
-{
-    builder.WebHost.UseUrls(kestrelUrl);
-}
+    builder.WebHost.UseUrls("http://localhost:91");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
