@@ -1,9 +1,0 @@
-#! db-sqlserver_data-persistentVolumeClaim.yaml
-# Generated code, do not edit
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-    name: db-sqlserver-data
-    namespace: shoestore
-spec:
-    storageClassName: "hostpath" # see docker/desktop-storage-provisioner
