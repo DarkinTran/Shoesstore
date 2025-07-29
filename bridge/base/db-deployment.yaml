@@ -1,0 +1,45 @@
+#! db-deployment.yaml
+# Generated code, do not edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: db
+    namespace: shoestore
+    labels:
+        com.docker.compose.project: shoestore
+        com.docker.compose.service: db
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            com.docker.compose.project: shoestore
+            com.docker.compose.service: db
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                com.docker.compose.project: shoestore
+                com.docker.compose.service: db
+                com.docker.compose.network.default: "true"
+        spec:
+            restartPolicy: unless-stopped
+            containers:
+                - name: db
+                  image: mcr.microsoft.com/mssql/server:2022-latest
+                  imagePullPolicy: IfNotPresent
+                  env:
+                    - name: ACCEPT_EULA
+                      value: "Y"
+                    - name: SA_PASSWORD
+                      value: "Dnsdud00@@"
+                  ports:
+                    - name: db-1433
+                      containerPort: 1433
+                  volumeMounts:
+                    - name: var-opt-mssql
+                      mountPath: /var/opt/mssql
+            volumes:
+                - name: var-opt-mssql
+                  persistentVolumeClaim:
+                    claimName: db-sqlserver-data

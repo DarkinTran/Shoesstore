@@ -1,0 +1,9 @@
+#! shoestore-service.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: Service
+metadata:
+    name: shoestore-published
+    namespace: shoestore
+spec:
+    type: LoadBalancer
