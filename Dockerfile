@@ -12,7 +12,7 @@ WORKDIR "/src/."
 RUN dotnet build "Shoestore.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Shoestore.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Shoestore.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:PreserveCompilationContext=true
 
 FROM base AS final
 WORKDIR /app
