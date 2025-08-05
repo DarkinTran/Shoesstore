@@ -5,15 +5,15 @@ services:
     user: root
     ports:
       - "9090:9090"
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./alert-rules:/etc/prometheus/rules
-      - ./probe:/etc/prometheus/probe
-      # mount NFS Cluster
-      # - /mnt/nfs-cluster/prometheus_data:/prometheus/data
-      - ./prometheus_data:/prometheus/data
+    # volumes:
+    #   - /etc/timezone:/etc/timezone:ro
+    #   - /etc/localtime:/etc/localtime:ro
+    #   - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    #   - ./alert-rules:/etc/prometheus/rules
+    #   - ./probe:/etc/prometheus/probe
+    #   # mount NFS Cluster
+    #   # - /mnt/nfs-cluster/prometheus_data:/prometheus/data
+    #   - ./prometheus_data:/prometheus/data
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.retention.time=5d
@@ -27,10 +27,10 @@ services:
     user: root
     ports:
       - "9093:9093"
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./alertmanager:/etc/alertmanager
+    # volumes:
+    #   - /etc/timezone:/etc/timezone:ro
+    #   - /etc/localtime:/etc/localtime:ro
+    #   - ./alertmanager:/etc/alertmanager
     # environment:
     #   - BOT_TOKEN=${BOT_TOKEN}
     command:
@@ -44,20 +44,20 @@ services:
     user: root
     ports:
       - "3000:3000"
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      - ./grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
-      - ./grafana/data:/var/lib/grafana
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+    # volumes:
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
+      # - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      # - ./grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      # - ./grafana/data:/var/lib/grafana
+      # - ./grafana/grafana.ini:/etc/grafana/grafana.ini
       # - ./grafana/grafana.ini:/etc/grafana/custom.ini
-    env_file:
-      - .grafana.secret
+    # env_file:
+    #   - .grafana.secret
     networks:
       - monitoring
 
 networks:
   monitoring:
-    external: true
+    # external: true
     # driver: overlay
