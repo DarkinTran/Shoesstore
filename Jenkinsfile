@@ -101,7 +101,7 @@ pipeline {
                         REM Run the new Shoestore container
                         docker run -d \
                             --name shoestore \
-                            -p 95:8080 \
+                            -p 80:8080 \
                             -v /path/to/your/app/data:/app/data \
                             -e ASPNETCORE_ENVIRONMENT=Production \
                             nguyentt07/shoestore:latest"
