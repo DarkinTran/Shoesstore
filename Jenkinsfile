@@ -66,45 +66,37 @@ pipeline {
                 }
             }
         }
-        /*
-        stage("Deploy on server") 
-        {
-            steps {
-                echo "Deploy new image !!!"
+        
+        // stage("Deploy on server") 
+        // {
+        //     steps {
+        //         echo "Deploy new image !!!"
 
-                sh '''
-                    cd /home/jenkins/shoestore
-                    echo IMAGE_NAME=${IMAGE_NAME} > .env
-                    echo VERSION=${VERSION} >> .env
-                    echo "Starting docker compose down"
-                    sudo docker compose down
-                    echo "Running new image"
-                    sudo docker compose up -d
-                '''
-            }
-        }
-        */
+        //         sh '''
+        //             cd /home/jenkins/shoestore
+        //             echo IMAGE_NAME=${IMAGE_NAME} > .env
+        //             echo VERSION=${VERSION} >> .env
+        //             echo "Starting docker compose down"
+        //             sudo docker compose down
+        //             echo "Running new image"
+        //             sudo docker compose up -d
+        //         '''
+        //     }
+        // }
+      
 		stage('Deploy Shoestore on server') {
             steps {
                 echo '🚀 Deploying Shoestore app via SSH'
 
                 withCredentials([sshUserPrivateKey(credentialsId: 'CX63200417', keyFileVariable: 'KEYFILE')]) {
                     bat '''
-                    REM Set permissions for the SSH key
-                    icacls "%KEYFILE%" /inheritance:r
-                    icacls "%KEYFILE%" /grant:r "NT AUTHORITY\\SYSTEM:R"
+                        icacls "%KEYFILE%" /inheritance:r
+                        icacls "%KEYFILE%" /grant:r "NT AUTHORITY\\SYSTEM:R"
 
-                    REM Stop and remove the existing container (if any)
-                    ssh -i "%KEYFILE%" -o StrictHostKeyChecking=no CX63200417@54.151.212.196 "
-                        docker rm -f shoestore || true;
-
-                        REM Run the new Shoestore container
-                        docker run -d \
-                            --name shoestore \
-                            -p 80:8080 \
-                            -v /path/to/your/app/data:/app/data \
-                            -e ASPNETCORE_ENVIRONMENT=Production \
-                            nguyentt07/shoestore:latest"
+                        REM Dừng và chạy lại container
+                        # Test từ Jenkins server
+                        ssh -i "%KEYFILE%" -o StrictHostKeyChecking=no CX63200417@54.151.212.196 "docker --version"
+                        
                     '''
                 }
             }
