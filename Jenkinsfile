@@ -66,6 +66,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Deploy on server") 
         {
             steps {
@@ -82,6 +83,7 @@ pipeline {
                 '''
             }
         }
+        */
 		stage('Deploy Shoestore on server') {
             steps {
                 echo '🚀 Deploying Shoestore app via SSH'
