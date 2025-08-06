@@ -94,9 +94,7 @@ pipeline {
                         icacls "%KEYFILE%" /grant:r "NT AUTHORITY\\SYSTEM:R"
 
                         REM Dừng và chạy lại container
-                        # Test từ Jenkins server
-                        ssh -i "%KEYFILE%" -o StrictHostKeyChecking=no CX63200417@54.151.212.196 "docker --version"
-                        
+                        ssh -i "%KEYFILE%" -o StrictHostKeyChecking=no CX63200417@54.151.212.196 "docker rm -f shoestore && docker run -d --name shoestore -p 80:8080 nguyentt07/shoestore:latest"
                     '''
                 }
             }
