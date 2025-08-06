@@ -88,7 +88,7 @@ pipeline {
             steps {
                 echo '🚀 Deploying Shoestore app via SSH'
 
-                withCredentials([sshUserPrivateKey(credentialsId: 'nguyentt07', keyFileVariable: 'KEYFILE')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'CX63200417', keyFileVariable: 'KEYFILE')]) {
                     bat '''
                     REM Set permissions for the SSH key
                     icacls "%KEYFILE%" /inheritance:r
