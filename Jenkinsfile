@@ -84,7 +84,7 @@ pipeline {
         //     }
         // }
       
-		stage('Deploy Shoestore on server') {
+		stage('Deploy Shoestore on AWS EC2') {
             steps {
                 echo '🚀 Deploying Shoestore app via SSH'
 
